@@ -1,6 +1,8 @@
 var express = require("express")
 var bodyParser = require("body-parser")
 var mongoose = require("mongoose")
+const { Timestamp } = require("mongodb")
+
 
 const app = express()
 
@@ -11,10 +13,10 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 
-mongoose.connect('mongodb://Localhost:27017/portfolio', {
+mongoose.connect('mongodb://127.0.0.1:27017/portfolio', {
     useNewUrlParser: true,
-    useUnifiedTopoLogy: true
-
+    useUnifiedTopoLogy: true,
+    
 });
 var db = mongoose.connection;
 
@@ -33,7 +35,8 @@ app.post("/signup", (req, res) => {
         "name": name,
         "email": email,
         "number": number,
-        "message": message
+        "message": message,
+        "timestamp": new Date()
     }
 
     db.collection('contact').insertOne(data, (err, collection) => {
@@ -43,10 +46,10 @@ app.post("/signup", (req, res) => {
             throw err;
         } 
         console.log("record inserted");
-
+        res.redirect('POPUP.html');
     });
     
-    res.redirect('POPUP.html')
+   
 
 })
 
@@ -57,6 +60,6 @@ app.get("/", (req, res) => {
             '*' 
     })
     return res.redirect('index.html');
-}).listen(4000);
+}).listen(200);
 
 console.log("Listening")
